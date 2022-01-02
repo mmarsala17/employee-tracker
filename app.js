@@ -124,7 +124,7 @@ const startMenu = async() => {
     .then(function(result) {
         switch (result.startMenuQuestion) {
             case "Show all Roles":
-                db.query('SELECT role.*, department.name AS department_name FROM role LEFT JOIN department ON role.department_id = department.id', function (err, results) {
+                db.query('SELECT role.id, role.title, role.salary,  department.name AS department_name FROM role LEFT JOIN department ON role.department_id = department.id', function (err, results) {
                     console.log("");
                     console.table(results);
                 });
@@ -132,7 +132,7 @@ const startMenu = async() => {
                 break;
 
                 case "Add Role":
-                    db.query('SELECT * FROM department', function (err, results) {
+                    db.query('SELECT role.id, role.title FROM role', function (err, results) {
                         console.log("");
                         console.table(results);
                     });
@@ -152,7 +152,7 @@ const startMenu = async() => {
                         break;
 
                     case "Show Employees":
-                        db.query('SELECT employee.*, role.title AS role_title FROM employee LEFT JOIN role ON employee.role_id = role.id', function (err, results) {
+                        db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;", function (err, results) {
                             console.log("");
                             console.table(results);
                         });
@@ -172,7 +172,7 @@ const startMenu = async() => {
                             break;
 
                             case "Update Employee's role":
-                                db.query('SELECT employee.*, role.title AS role_title FROM employee LEFT JOIN role ON employee.role_id = role.id', function (err, results){
+                                db.query('SELECT employee.id, employee.first_name, employee.last_name FROM employee', function (err, results){
                                     console.log("");
                                     console.table(results);
                                 });
