@@ -22,21 +22,24 @@ const startMenu = async() => {
         switch (result.startMenuQuestion) {
             case "Show all Roles":
                 db.query('SELECT role.*, department.name AS department_name FROM role LEFT JOIN department ON role.department_id = department.id', function (err, results) {
-                    console.log(results);
+                    console.log("");
+                    console.table(results);
                 });
                 startMenu();
                 break;
 
                 case "Show Departments":
                     db.query('SELCET * FROM department', function (err, results){
-                        console.log(results);
+                        console.log("");
+                        console.table(results);
                     });
                     startMenu();
                     break;
 
                     case "Show Employees":
-                        db.query('SELECT * FROM employee', function (err, results) {
-                            console.log(results);
+                        db.query('SELECT employee.*, role.title AS role_title FROM employee LEFT JOIN role ON employee.role_id = role.id', function (err, results) {
+                            console.log("");
+                            console.table(results);
                         });
                         startMenu();
                         break;
