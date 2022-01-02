@@ -1,5 +1,7 @@
 const inquirer = require('inquirer');
+const roleRoutes = require('./routes/apiRoutes/roleRoutes')
 const cTable = require('console.table');
+const db = require('./db/connection');
 
 const startMenuQuestion = [
     {
@@ -8,30 +10,45 @@ const startMenuQuestion = [
         message: 'What are you looking to do?',
         choices: [
             "Show all Roles",
-            "Add an Intern",
-            "There are no more team members to add"
+            "Show Departments",
+            "Show Employees"
         ]
     }
 ]
 
-const startApp = async() => {
-    console.log('Welcome to our Employee Tracker!');
-    console.log('Choose an option to get started:');
-
+const startMenu = async() => {
     const result = await inquirer.prompt(startMenuQuestion)
     .then(function(result) {
         switch (result.startMenuQuestion) {
             case "Show all Roles":
-                showAllRoles();
+                db.query('SELECT role.*, department.name AS department_name FROM role LEFT JOIN department ON role.department_id = department.id', function (err, results) {
+                    console.log(results);
+                });
+                startMenu();
                 break;
 
-                case "Add an Intern":
+                case "Show Departments":
+                    db.query('SELCET * FROM department', function (err, results){
+                        console.log(results);
+                    });
+                    startMenu();
                     break;
 
-                    case "There are no more team members to add":
+                    case "Show Employees":
+                        db.query('SELECT * FROM employee', function (err, results) {
+                            console.log(results);
+                        });
+                        startMenu();
                         break;
         }
-    })
+    });
+}
+
+const startApp = async() => {
+    console.log('Welcome to our Employee Tracker!');
+    console.log('Choose an option below:');
+
+    startMenu();
 }
 
 startApp();
