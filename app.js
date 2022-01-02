@@ -11,11 +11,31 @@ const startMenuQuestion = [
         choices: [
             "Show all Roles",
             "Show Departments",
+            "Add Department",
             "Show Employees"
         ]
     }
 ]
 
+const addDepartmentQuestion = [
+    {
+        type: 'input',
+        name: 'name',
+        message: 'What Department do you need to add?'
+    }
+]
+
+const addDepartment = async() => {
+    const result = await inquirer.prompt(addDepartmentQuestion)
+    const sql = 'INSERT INTO department (name) VALUES (?)';
+    const params = [result.name];
+
+    db.query(sql, params, function (err, results) {
+        console.log("");
+        console.table(results);
+    });
+    startMenu();
+}
 const startMenu = async() => {
     const result = await inquirer.prompt(startMenuQuestion)
     .then(function(result) {
@@ -36,6 +56,10 @@ const startMenu = async() => {
                     startMenu();
                     break;
 
+                    case "Add Department":
+                        addDepartment();
+                        break;
+                        
                     case "Show Employees":
                         db.query('SELECT employee.*, role.title AS role_title FROM employee LEFT JOIN role ON employee.role_id = role.id', function (err, results) {
                             console.log("");
