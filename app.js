@@ -14,7 +14,8 @@ const startMenuQuestion = [
             "Show Departments",
             "Add Department",
             "Show Employees",
-            "Add Employee"
+            "Add Employee",
+            "Update Employee"
         ]
     }
 ]
@@ -57,9 +58,30 @@ const addEmployeeQuestions = [
     },
     {
         type: 'input',
+        name: 'role_id',
+        message: 'What role is the employee in? Use the number ID!'
+    },
+    {
+        type: 'input',
         name: 'manager_id',
         message: 'Who is the manager for the employee? use the number ID!'
     }
+]
+
+const chooseEmployeeQuestion = [
+    {
+        type: 'input',
+        name: 'employee_id',
+        message: 'Which employee do you need to update? Use number ID!'
+    },
+]
+
+const updateEmployeeRoleQuestion = [
+    {
+        type: 'input',
+        name: 'role_id',
+        message: 'What new role do you need for your employee? use number ID!'
+    },
 ]
 
 const addRole = async() => {
@@ -148,6 +170,14 @@ const startMenu = async() => {
                             });
                             addEmployee();
                             break;
+
+                            case "Update Employee's role":
+                                db.query('SELECT employee.*, role.title AS role_title FROM employee LEFT JOIN role ON employee.role_id = role.id', function (err, results){
+                                    console.log("");
+                                    console.table(results);
+                                });
+                                chooseEmployee();
+                                break;
                         }
     });
 }
